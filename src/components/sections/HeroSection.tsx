@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { MapPin, Zap, Shield } from "lucide-react";
 import Image from "next/image";
@@ -8,6 +9,17 @@ export const HeroSection = () => {
   const scrollToSection = (id: string) => {
     document.querySelector(id)?.scrollIntoView({ behavior: "smooth" });
   };
+
+  // Auto-scroll to HeroSection (#home) on refresh/load
+  useEffect(() => {
+    const el = document.querySelector("#home");
+    if (el) {
+      // Small delay ensures layout & images load first
+      setTimeout(() => {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 300);
+    }
+  }, []);
 
   return (
     <section
@@ -21,7 +33,7 @@ export const HeroSection = () => {
           alt="School bus fleet management and tracking system"
           fill
           priority
-          className="object-cover opacity-25"
+          className="object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-br from-background/90 via-background/80 to-background/60 backdrop-blur-sm" />
       </div>
@@ -30,12 +42,12 @@ export const HeroSection = () => {
       <div className="absolute top-1/3 left-[-10%] w-[250px] h-[250px] sm:w-[300px] sm:h-[300px] md:w-[350px] md:h-[350px] bg-gradient-to-br from-yellow-400/40 to-yellow-600/10 blur-3xl rounded-full animate-pulse-slow" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[300px] h-[300px] sm:w-[350px] sm:h-[350px] md:w-[400px] md:h-[400px] bg-gradient-to-tr from-yellow-400/30 to-amber-500/20 blur-3xl rounded-full animate-pulse-slow" />
 
-      {/* Content Container */}
+      {/* Content */}
       <div className="relative z-10 container mx-auto px-4 sm:px-6 md:px-10 lg:px-16 flex flex-col items-center justify-center text-center">
         <div className="max-w-6xl w-full">
           {/* Headline */}
           <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight mb-4 sm:mb-5 tracking-tight animate-fade-up">
-            Integrated Bus Management System
+            School Transport Advanced Routing System
           </h1>
 
           {/* Subtitle */}
