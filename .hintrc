@@ -1,0 +1,12 @@
+{
+  "extends": [
+    "development"
+  ],
+  "hints": {
+    "typescript-config/consistent-casing": "off",
+    "apple-touch-icons": "off",
+    "button-type": "off",
+    "axe/name-role-value": "off",
+    "no-inline-styles": "off"
+  }
+}
