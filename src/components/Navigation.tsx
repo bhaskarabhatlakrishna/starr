@@ -127,11 +127,10 @@ export const Navigation = () => {
     <>
       {/* TOP HEADER */}
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b ${
-          isScrolled
-            ? "bg-background/88 backdrop-blur-md border-border/40 shadow-[0_10px_30px_rgba(0,0,0,0.06)]"
-            : "bg-transparent border-transparent"
-        }`}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b ${isScrolled
+          ? "bg-background/88 backdrop-blur-md border-border/40 shadow-[0_10px_30px_rgba(0,0,0,0.06)]"
+          : "bg-transparent border-transparent"
+          }`}
       >
         <nav className="container mx-auto px-4 md:px-8">
           <div className="flex h-[68px] items-center justify-between">
@@ -155,11 +154,10 @@ export const Navigation = () => {
                 <button
                   key={item.name}
                   onClick={() => scrollToSection(item.href)}
-                  className={`relative rounded-md px-4 py-2 text-sm font-medium transition-all duration-200 ${
-                    active === item.href
-                      ? "text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-400 after:absolute after:inset-x-3 after:-bottom-1 after:h-[2px] after:rounded-full after:bg-gradient-to-r after:from-yellow-400 after:to-amber-400"
-                      : "text-muted-foreground hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-yellow-400 hover:to-amber-400"
-                  }`}
+                  className={`relative rounded-md px-4 py-2 text-sm font-medium transition-all duration-200 ${active === item.href
+                    ? "text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-400 after:absolute after:inset-x-3 after:-bottom-1 after:h-[2px] after:rounded-full after:bg-gradient-to-r after:from-yellow-400 after:to-amber-400"
+                    : "text-muted-foreground hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-yellow-400 hover:to-amber-400"
+                    }`}
                 >
                   {item.name}
                 </button>
@@ -193,9 +191,10 @@ export const Navigation = () => {
       <div className="lg:hidden">
         <nav
           aria-label="Bottom navigation"
-          className="fixed bottom-4 left-1/2 z-50 w-[min(92%,720px)] -translate-x-1/2 rounded-2xl bg-card/92 backdrop-blur-md shadow-xl px-3 py-2 border border-border/40"
+          className="fixed bottom-4 left-1/2 z-50 w-[min(92%,720px)] -translate-x-1/2 rounded-2xl bg-card/90 backdrop-blur-md shadow-xl px-3 py-2 border border-border/40"
         >
           <div className="flex items-center justify-between">
+            {/* Left icons */}
             {leftPrimary.map((item) => {
               const Icon = item.icon;
               const isActive = active === item.href;
@@ -203,29 +202,79 @@ export const Navigation = () => {
                 <button
                   key={item.name}
                   onClick={() => scrollToSection(item.href)}
-                  className={`flex flex-col items-center gap-1 py-1 px-2 text-[11px] transition-all ${
-                    isActive ? "text-yellow-400 scale-105" : "text-muted-foreground hover:text-yellow-400"
-                  }`}
+                  className={`flex flex-col items-center gap-1 py-1 px-2 text-[11px] transition-all ${isActive ? "text-yellow-400 scale-105" : "text-muted-foreground hover:text-yellow-400"
+                    }`}
                 >
                   <Icon className="h-5 w-5" />
-                  <span className="truncate">{item.name}</span>
+                  <span>{item.name}</span>
                 </button>
               );
             })}
 
-            {/* Center: More */}
-            <div className="relative flex items-center justify-center">
+            {/* Center "More" Button + Semi-Circle Menu */}
+            <div className="relative flex items-center justify-center " onClick={() => setIsMoreOpen((s) => !s)}
+            >
               <button
-                onClick={() => setIsMoreOpen((s) => !s)}
                 aria-expanded={isMoreOpen}
                 aria-controls="more-popup"
-                className="relative -mt-16 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-r from-yellow-400 to-amber-400 text-black shadow-lg ring-2 ring-card/70 transition-transform hover:scale-105 focus:outline-none"
+                className="relative -mt-16 flex h-14 w-14 z-50 items-center justify-center rounded-full bg-gradient-to-r from-yellow-400 to-amber-400 text-black shadow-lg ring-2 ring-card/70 transition-transform hover:scale-105 focus:outline-none"
                 title="More"
               >
                 {isMoreOpen ? <X className="h-5 w-5" /> : <MoreHorizontal className="h-5 w-5" />}
               </button>
+
+              {/* Semi-Circle Popup (Bottom → Top on Left Arc) */}
+              <div
+                id="more-popup"
+                ref={popupRef}
+                className={`absolute bottom-[25px] w-48 h-20 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${isMoreOpen ? "opacity-100 scale-100" : "opacity-0 scale-75 pointer-events-none"
+                  }`}
+              >
+                <div className="relative w-full h-full flex items-center justify-center">
+                  {moreItems.map((mi, i) => {
+                    const Icon = mi.icon;
+                    const total = moreItems.length;
+                    // Semi-circle arc on the left (from bottom to top)
+                    const startAngle = Math.PI;   // bottom (90°)
+                    const endAngle = Math.PI * 2;   // top (270°)
+                    const angle = startAngle + (i / (total - 1)) * (endAngle - startAngle);
+                    const radius = 90;
+                    const x = Math.cos(angle) * radius;
+                    const y = Math.sin(angle) * radius;
+
+                    return (
+                      <div
+                        key={mi.name}
+                        className="absolute transition-all duration-500 ease-[cubic-bezier(0.25,1,0.3,1)]"
+                        style={{
+                          transform: isMoreOpen
+                            ? `translate(${x}px, ${y}px)`
+                            : "translate(0,0)",
+                          opacity: isMoreOpen ? 1 : 0,
+                          transitionDelay: `${i * 0.05}s`,
+                        }}
+                      >
+                        <button
+                          onClick={() => {
+                            scrollToSection(mi.href);
+                            setIsMoreOpen(false);
+                          }}
+                          className="flex flex-col items-center gap-1 text-xs text-foreground hover:text-yellow-400 transition-all"
+                        >
+                          <div className="flex items-center justify-center h-10 w-10 rounded-full bg-yellow-400 shadow-md border border-border/30">
+                            <Icon className="h-5 w-5" />
+                          </div>
+                          <span>{mi.name}</span>
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
 
+
+            {/* Right icons */}
             {rightPrimary.map((item) => {
               const Icon = item.icon;
               const isActive = active === item.href;
@@ -233,55 +282,19 @@ export const Navigation = () => {
                 <button
                   key={item.name}
                   onClick={() => scrollToSection(item.href)}
-                  className={`flex flex-col items-center gap-1 py-1 px-2 text-[11px] transition-all ${
-                    isActive ? "text-yellow-400 scale-105" : "text-muted-foreground hover:text-yellow-400"
-                  }`}
+                  className={`flex flex-col items-center gap-1 py-1 px-2 text-[11px] transition-all ${isActive ? "text-yellow-400 scale-105" : "text-muted-foreground hover:text-yellow-400"
+                    }`}
                 >
                   <Icon className="h-5 w-5" />
-                  <span className="truncate">{item.name}</span>
+                  <span>{item.name}</span>
                 </button>
               );
             })}
           </div>
         </nav>
-
-        {/* More Popup */}
-        <div
-          id="more-popup"
-          ref={popupRef}
-          role="dialog"
-          aria-hidden={!isMoreOpen}
-          className={`pointer-events-none fixed left-1/2 z-50 w-[min(88%,420px)] -translate-x-1/2 transform-gpu transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-            isMoreOpen
-              ? "opacity-100 translate-y-0 scale-100 pointer-events-auto"
-              : "opacity-0 translate-y-3 scale-95 pointer-events-none"
-          }`}
-          style={{ bottom: "92px", willChange: "transform, opacity" }}
-        >
-          <div className="mx-auto rounded-2xl bg-white/90 dark:bg-[#0b1220]/75 backdrop-blur-md border border-border/30 shadow-xl px-4 py-3">
-            <div className="flex items-center justify-between gap-3">
-              {moreItems.map((mi) => {
-                const Icon = mi.icon;
-                return (
-                  <button
-                    key={mi.name}
-                    onClick={() => {
-                      scrollToSection(mi.href);
-                      setIsMoreOpen(false);
-                    }}
-                    className="flex flex-col items-center gap-1 py-1 rounded-lg hover:bg-secondary/40 transition-colors"
-                  >
-                    <div className="flex items-center justify-center h-10 w-10 rounded-lg bg-card/60">
-                      <Icon className="h-5 w-5 text-foreground/90" />
-                    </div>
-                    <span className="text-xs">{mi.name}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </div>
       </div>
+
+
 
       {/* Spacer for header height */}
       <div className="h-[68px]" aria-hidden />
