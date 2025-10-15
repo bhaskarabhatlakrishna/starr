@@ -1,10 +1,19 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Building2, GraduationCap, Users } from "lucide-react";
+import { Building2, GraduationCap, Users, Cpu, ShieldCheck, Smartphone } from "lucide-react";
 import Image from "next/image";
 
 export const AboutSection = () => {
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+
+  // prevent body scroll when modal is open
+  useEffect(() => {
+    if (isPopupOpen) document.body.style.overflow = "hidden";
+    else document.body.style.overflow = "";
+  }, [isPopupOpen]);
+
   return (
     <section
       id="about"
@@ -73,6 +82,7 @@ export const AboutSection = () => {
         <div className="text-center">
           <Button
             size="lg"
+            onClick={() => setIsPopupOpen(true)}
             className="relative overflow-hidden px-6 sm:px-8 py-4 sm:py-5 md:py-6 rounded-xl font-semibold text-sm sm:text-base text-white shadow-lg border-0 transition-all hover:scale-105 group"
             style={{
               background:
@@ -86,6 +96,85 @@ export const AboutSection = () => {
           </Button>
         </div>
       </div>
+
+      {/* Popup Modal */}
+      {isPopupOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center px-4 sm:px-6"
+          role="dialog"
+          aria-modal="true"
+        >
+          {/* Backdrop (slightly dim, not transparent) */}
+          <div
+            className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"
+            onClick={() => setIsPopupOpen(false)}
+          />
+
+          {/* Popup Card */}
+          <div className="relative z-10 w-full max-w-2xl bg-white dark:bg-[#0b1220] rounded-2xl shadow-2xl border border-border/40 overflow-hidden animate-in fade-in-50 slide-in-from-bottom-4">
+            {/* Header */}
+            <div className="flex items-center justify-between px-5 sm:px-6 py-4 border-b border-border/40">
+              <h3 className="text-lg sm:text-xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-amber-400">
+                Technical Overview
+              </h3>
+              <button
+                onClick={() => setIsPopupOpen(false)}
+                className="p-2 hover:bg-secondary/40 rounded-lg transition-colors"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Content */}
+            <div className="max-h-[70vh] overflow-y-auto p-5 sm:p-6 space-y-6">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                <div className="flex items-center justify-center h-12 w-12 rounded-xl bg-yellow-400/15 flex-shrink-0">
+                  <Cpu className="h-6 w-6 text-yellow-500" />
+                </div>
+                <div>
+                  <h4 className="font-semibold text-base sm:text-lg">
+                    Advanced Architecture
+                  </h4>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Built on a microservices-based architecture, ensuring
+                    scalability, modularity, and secure API integration.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                <div className="flex items-center justify-center h-12 w-12 rounded-xl bg-yellow-400/15 flex-shrink-0">
+                  <ShieldCheck className="h-6 w-6 text-yellow-500" />
+                </div>
+                <div>
+                  <h4 className="font-semibold text-base sm:text-lg">
+                    Security & Compliance
+                  </h4>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Incorporates RBAC, encrypted communication, and audit
+                    logging to meet enterprise-grade data protection standards.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                <div className="flex items-center justify-center h-12 w-12 rounded-xl bg-yellow-400/15 flex-shrink-0">
+                  <Smartphone className="h-6 w-6 text-yellow-500" />
+                </div>
+                <div>
+                  <h4 className="font-semibold text-base sm:text-lg">
+                    Mobile Integration
+                  </h4>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Fully responsive mobile app support with live GPS, push
+                    notifications, and real-time analytics dashboards.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 };
