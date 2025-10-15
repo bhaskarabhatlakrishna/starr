@@ -148,11 +148,11 @@ export const FeaturesSection = () => {
             const isExpanded = selectedFeature === index && window.innerWidth >= 1024;
 
             return (
-              <div key={index} ref={(el) => (cardRefs.current[index] = el)}>
+              <div key={index} ref={(el) => { cardRefs.current[index] = el; }}>
                 <Card
                   className={`group relative p-6 sm:p-8 rounded-2xl border border-border/40 bg-card/70 backdrop-blur-md shadow-sm hover:shadow-[0_8px_30px_rgba(250,204,21,0.15)] transition-all duration-300 ${isExpanded
-                      ? "lg:col-span-2 xl:col-span-3 bg-card shadow-lg"
-                      : "hover:-translate-y-1"
+                    ? "lg:col-span-2 xl:col-span-3 bg-card shadow-lg"
+                    : "hover:-translate-y-1"
                     }`}
                 >
                   <div className="flex flex-col items-start">
